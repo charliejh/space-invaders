@@ -1,5 +1,5 @@
 # Space Invaders
 
-The classic arcade game Space Invaders re-created in Java.
+A Space Invaders like game created in Java.
 
 NOT YET COMPLETE
