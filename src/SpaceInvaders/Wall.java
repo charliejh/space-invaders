@@ -13,7 +13,6 @@ public class Wall {
             blocks.add(new Block(10, 7 + i, 49, color));
             blocks.add(new Block(10, 7 + i, 48, color));
         }
-
         blocks.add(new Block(10, 7, 51, color));
         blocks.add(new Block(10, 11, 51, color));
     }

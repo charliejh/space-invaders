@@ -39,7 +39,69 @@ public class Gameplay extends JComponent implements KeyListener {
      *
      */
     private void invaderUpdate() {
+        if (invaders.get(0).getDirection().equals("LEFT")) {
+            moveInvadersLeft();
+        }
+        else if (invaders.get(0).getDirection().equals("DOWN")) {
+            moveInvadersDown();
+        }
+        else if (invaders.get(0).getDirection().equals("RIGHT")) {
+            moveInvadersRight();
+        }
         frame.repaint();
+    }
+
+    private void moveInvadersRight() {
+        int x = 0;
+        for (int i = 0; i < invaders.size(); i++) {
+            for (int j = 0; j < invaders.get(i).getBlockSize(); j++) {
+                if (invaders.get(i).getBlock(j).getX() > x) {
+                    x = invaders.get(i).getBlock(j).getX();
+                }
+            }
+        }
+        for (int i = 0; i < invaders.size(); i++) {
+            if (x < 78) {
+                invaders.get(i).move(1, 0);
+            }
+            if (x >= 78) {
+                invaders.get(i).setPreviousDirection(invaders.get(i).getDirection());
+                invaders.get(i).setDirection("DOWN");
+            }
+        }
+    }
+
+    private void moveInvadersDown() {
+            for (int i = 0; i < invaders.size(); i++) {
+                invaders.get(i).move(0, 1);
+                if (invaders.get(i).getPreviousDirection().equals("RIGHT")) {
+                    invaders.get(i).setDirection("LEFT");
+                }
+                else if (invaders.get(i).getPreviousDirection().equals("LEFT")) {
+                    invaders.get(i).setDirection("RIGHT");
+                }
+            }
+
+    }
+
+    private void moveInvadersLeft() {
+            int x = 80;
+            for (int i = 0; i < invaders.size(); i++) {
+                for (int j = 0; j < invaders.get(i).getBlockSize(); j++) {
+                    if (invaders.get(i).getBlock(j).getX() < x) {
+                        x = invaders.get(i).getBlock(j).getX();
+                    }
+                }
+            }
+        for (int i = 0; i < invaders.size(); i++) {
+            if (x > 1) {
+                invaders.get(i).move(-1, 0);
+            }
+            if (x <= 1) {
+                invaders.get(i).setPreviousDirection(invaders.get(i).getDirection());
+                invaders.get(i).setDirection("DOWN");
+            }
+        }
     }
 
     /**

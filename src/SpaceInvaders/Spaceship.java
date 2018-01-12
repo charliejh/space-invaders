@@ -8,7 +8,7 @@ public class Spaceship {
     private Block[] blocks = new Block[11];
     private int life = 5;
     private ArrayList<Block> bullets = new ArrayList<>();
-    Color color;
+    private Color color;
 
     /**
      *
@@ -19,9 +19,6 @@ public class Spaceship {
             blocks[i] = new Block(10, 13 + i, 58, color);
             blocks[i + 5] = new Block(10, 13 + i, 57, color);
         }
-//        for (int i = 10; i < 13; i++) {
-//            blocks[i] = new Block(10, 14 + i - 10, 56, color);
-//        }
         blocks[10] = new Block(10, 15, 56, color);
     }
 

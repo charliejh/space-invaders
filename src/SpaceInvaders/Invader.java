@@ -6,6 +6,8 @@ public class Invader {
 
     private Block[] blocks = new Block[8];
     private int life = 2;
+    private String direction = "LEFT";
+    private String previousDirection = "LEFT";
 
     /**
      *
@@ -61,4 +63,22 @@ public class Invader {
      */
     public int getLife() { return life; }
 
+    /**
+     *
+     */
+    public String getDirection() { return direction; }
+
+    /**
+     *
+     */
+    public void setDirection(String direction) { this.direction = direction; }
+
+    /**
+     *
+     */
+    public void setPreviousDirection(String direction) { this.previousDirection = direction; }
+
+    public String getPreviousDirection() {
+        return previousDirection;
+    }
 }
