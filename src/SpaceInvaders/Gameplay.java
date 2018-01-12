@@ -87,22 +87,17 @@ public class Gameplay extends JComponent implements KeyListener {
      *
      */
     private void createInvaders() {
-        for (int i = 0; i < 11; i++) {
+        int x = -8;
+        int y = 0;
+        for (int i = 0; i < 22; i++) {
             invaders.add(new Invader(Color.white));
+            x += 6;
+            if (x == 64) {
+                x = -2;
+                y = 6;
+            }
+            invaders.get(i).move(x, y);
         }
-        //invaders.get(0).move(-5, 0);
-        invaders.get(0).move(-2, 0);
-        invaders.get(1).move(4, 0);
-        invaders.get(2).move(10, 0);
-        invaders.get(3).move(16, 0);
-        invaders.get(4).move(22, 0);
-        invaders.get(5).move(28, 0);
-        invaders.get(6).move(34, 0);
-        invaders.get(7).move(40, 0);
-        invaders.get(8).move(46, 0);
-        invaders.get(9).move(52, 0);
-        invaders.get(10).move(58, 0);
-
     }
 
     /**
