@@ -19,7 +19,7 @@ public class Gameplay extends JComponent implements KeyListener {
      */
     public Gameplay(Frame frame) {
         this.frame = frame;
-        spaceship = new Spaceship(new Color(140, 188, 93));
+        spaceship = new Spaceship(new Color(140, 255, 93));
         createWalls();
         createInvaders();
         frame.addKeyListener(this);
@@ -87,18 +87,21 @@ public class Gameplay extends JComponent implements KeyListener {
      *
      */
     private void createInvaders() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 11; i++) {
             invaders.add(new Invader(Color.white));
         }
-        invaders.get(1).move(10, 0);
-        invaders.get(2).move(20, 0);
-        invaders.get(3).move(30, 0);
-        invaders.get(4).move(40, 0);
-        invaders.get(5).move(-5, 6);
-        invaders.get(6).move(5, 6);
-        invaders.get(7).move(15, 6);
-        invaders.get(8).move(25, 6);
-        invaders.get(9).move(36, 6);
+        //invaders.get(0).move(-5, 0);
+        invaders.get(0).move(-2, 0);
+        invaders.get(1).move(4, 0);
+        invaders.get(2).move(10, 0);
+        invaders.get(3).move(16, 0);
+        invaders.get(4).move(22, 0);
+        invaders.get(5).move(28, 0);
+        invaders.get(6).move(34, 0);
+        invaders.get(7).move(40, 0);
+        invaders.get(8).move(46, 0);
+        invaders.get(9).move(52, 0);
+        invaders.get(10).move(58, 0);
 
     }
 
@@ -106,11 +109,12 @@ public class Gameplay extends JComponent implements KeyListener {
      *
      */
     private void createWalls() {
-        for (int i = 0; i < 3; i++) {
-            walls.add(new Wall(new Color(140, 188, 93)));
+        for (int i = 0; i < 4; i++) {
+            walls.add(new Wall(new Color(140, 255, 93)));
         }
         walls.get(1).move(20);
         walls.get(2).move(40);
+        walls.get(3).move(60);
     }
 
     /**
@@ -143,7 +147,7 @@ public class Gameplay extends JComponent implements KeyListener {
                 }
                 break;
             case KeyEvent.VK_RIGHT:
-                if (spaceship.getBlock(4).getX() <= 58) {
+                if (spaceship.getBlock(4).getX() <= 78) {
                     spaceship.move(2);
                 }
                 break;

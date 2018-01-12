@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Spaceship {
 
-    private Block[] blocks = new Block[14];
+    private Block[] blocks = new Block[11];
     private int life = 5;
     private ArrayList<Block> bullets = new ArrayList<>();
     Color color;
@@ -19,10 +19,10 @@ public class Spaceship {
             blocks[i] = new Block(10, 13 + i, 58, color);
             blocks[i + 5] = new Block(10, 13 + i, 57, color);
         }
-        for (int i = 10; i < 13; i++) {
-            blocks[i] = new Block(10, 14 + i - 10, 56, color);
-        }
-        blocks[13] = new Block(10, 15, 55, color);
+//        for (int i = 10; i < 13; i++) {
+//            blocks[i] = new Block(10, 14 + i - 10, 56, color);
+//        }
+        blocks[10] = new Block(10, 15, 56, color);
     }
 
     /**
@@ -39,7 +39,7 @@ public class Spaceship {
      *
      */
     public void shoot() {
-        bullets.add(new Block(10, blocks[13].getX(), blocks[13].getY() - 1, color));
+        bullets.add(new Block(10, blocks[blocks.length -1].getX(), blocks[blocks.length -1].getY() - 1, color));
     }
 
     /**
