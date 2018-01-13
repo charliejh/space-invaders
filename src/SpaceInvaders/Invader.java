@@ -43,6 +43,7 @@ public class Invader {
         }
     }
 
+
     /**
      *
      */
@@ -78,7 +79,9 @@ public class Invader {
      */
     public void setPreviousDirection(String direction) { this.previousDirection = direction; }
 
-    public String getPreviousDirection() {
-        return previousDirection;
-    }
+    /**
+     *
+     */
+    public String getPreviousDirection() { return previousDirection; }
+
 }

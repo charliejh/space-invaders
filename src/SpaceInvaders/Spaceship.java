@@ -80,6 +80,11 @@ public class Spaceship {
     /**
      *
      */
+    public int getNumberOfBlocks() { return blocks.length; }
+
+    /**
+     *
+     */
     public void deductLife() { life--; }
 
     /**
