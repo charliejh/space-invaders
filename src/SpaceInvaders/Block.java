@@ -18,12 +18,6 @@ public class Block {
     }
 
     /**
-     * Getters
-     */
-    public int getX() { return x; }
-    public int getY() { return y; }
-
-    /**
      * Moves the block
      * @param x - x position of the block
      * @param y - y position of the block
@@ -42,5 +36,11 @@ public class Block {
         graphics.setColor(new Color(0,0,0));
         graphics.drawRect(x * blockSize, y * blockSize, blockSize, blockSize);
     }
+
+    /**
+     * Getters
+     */
+    public int getX() { return x; }
+    public int getY() { return y; }
 
 }

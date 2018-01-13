@@ -24,17 +24,6 @@ public class Invader {
     }
 
     /**
-     *
-     * @param x
-     * @param y
-     */
-    public void move(int x, int y) {
-        for (int i = 0; i < blocks.length; i++) {
-            blocks[i].move(blocks[i].getX() + x, blocks[i].getY() + y);
-        }
-    }
-
-    /**
      * Draws the snake by calling the each blocks draw() method
      */
     public void draw(Graphics graphics) {
@@ -43,45 +32,53 @@ public class Invader {
         }
     }
 
-
     /**
-     *
+     * Moves the invader on the x and y axis
      */
-    public int getBlockSize() { return blocks.length; }
+    public void move(int x, int y) {
+        for (int i = 0; i < blocks.length; i++) {
+            blocks[i].move(blocks[i].getX() + x, blocks[i].getY() + y);
+        }
+    }
 
     /**
-     *
-     */
-    public Block getBlock(int index) { return blocks[index]; }
-
-    /**
-     *
-     */
-    public void deductLife() { life--; }
-
-    /**
-     *
-     */
-    public int getLife() { return life; }
-
-    /**
-     *
+     * Returns the current direction of the invader
      */
     public String getDirection() { return direction; }
 
     /**
-     *
+     * Sets the current direction of the invader
      */
     public void setDirection(String direction) { this.direction = direction; }
 
     /**
-     *
+     * Returns the previous direction of the invader
+     */
+    public String getPreviousDirection() { return previousDirection; }
+
+    /**
+     * Sets the previous direction of the invader
      */
     public void setPreviousDirection(String direction) { this.previousDirection = direction; }
 
     /**
-     *
+     * Returns the total numbers of blocks that are used to construct the invader
      */
-    public String getPreviousDirection() { return previousDirection; }
+    public int getBlockSize() { return blocks.length; }
+
+    /**
+     * Returns an individual block that constructs the invader using an index position
+     */
+    public Block getBlock(int index) { return blocks[index]; }
+
+    /**
+     * Deducts one life from the invader
+     */
+    public void deductLife() { life--; }
+
+    /**
+     * Returns the invaders life
+     */
+    public int getLife() { return life; }
 
 }

@@ -37,17 +37,17 @@ public class Wall {
     }
 
     /**
-     *
+     * Returns the total numbers of blocks that are used to construct the wall
      */
     public int getBlocksSize() { return blocks.size(); }
 
     /**
-     *
+     * Returns an individual block that constructs the wall using an index position
      */
     public Block getBlock(int index) { return blocks.get(index); }
 
     /**
-     *
+     * Removes a block from the blocks ArrayList using an index position
      */
     public void removeBlock(int index) { blocks.remove(index); }
 
