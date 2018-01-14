@@ -2,8 +2,6 @@ package SpaceInvaders;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -13,6 +11,7 @@ public class Gameplay extends JComponent implements KeyListener {
 
     private Frame frame;
     private Spaceship spaceship;
+    private ArrayList<Spaceship> lifeRemaining = new ArrayList<>();
     private SpaceshipInvader spaceshipInvader;
     private ArrayList<Block> spaceshipInvaderBullets = new ArrayList<>();
     private ArrayList<Invader> invaders = new ArrayList<>();
@@ -21,9 +20,10 @@ public class Gameplay extends JComponent implements KeyListener {
     private boolean gameOver = false;
     private boolean gamePaused = false;
     private int score = 0;
-    private Timer spaceshipInvaderMove;
-    private Timer spaceshipInvaderShootTimer;
-    private Timer spaceshipInvadersBulletsTimer;
+    private Timer repaintTimer = new Timer(10, e-> repaintFrame());
+    private Timer spaceshipInvaderMove = new Timer(40, event -> moveSpaceshipInvader());
+    private Timer spaceshipInvaderShootTimer = new Timer(200, event -> spaceshipInvaderShoot());
+    private Timer spaceshipInvadersBulletsTimer = new Timer(40, event -> spaceshipInvaderBulletsUpdate());
     
     /**
      * Constructor
@@ -31,6 +31,21 @@ public class Gameplay extends JComponent implements KeyListener {
     public Gameplay(Frame frame) {
         this.frame = frame;
         spaceship = new Spaceship(new Color(140, 255, 93));
+        for (int i = 0; i < spaceship.getLife(); i++) {
+            lifeRemaining.add(new Spaceship(new Color(140, 255, 93)));
+            if (i == 0) {
+                lifeRemaining.get(i).move(36);
+                lifeRemaining.get(i).moveY(-55);
+            }
+            else if (i == 1) {
+                lifeRemaining.get(i).move(42);
+                lifeRemaining.get(i).moveY(-55);
+            }
+            else if (i == 2) {
+                lifeRemaining.get(i).move(48);
+                lifeRemaining.get(i).moveY(-55);
+            }
+        }
         spaceshipInvader = new SpaceshipInvader(Color.red);
         createWalls();
         createInvaders();
@@ -41,6 +56,7 @@ public class Gameplay extends JComponent implements KeyListener {
      * Starts the game by starting all timers
      */
     public void start() {
+        repaintTimer.start();
         Timer invaderTimer = new Timer(1000, e -> moveInvaders());
         invaderTimer.start();
         Timer invaderShootTimer = new Timer(2000, e -> invadersShoot());
@@ -50,11 +66,8 @@ public class Gameplay extends JComponent implements KeyListener {
         Timer invaderBulletTimer = new Timer(40, e -> invadersBulletUpdate());
         invaderBulletTimer.start();
         Timer spaceshipInvaderTimer = new Timer(10000, e -> {
-            spaceshipInvaderMove = new Timer(40, event -> moveSpaceshipInvader());
             spaceshipInvaderMove.start();
-            spaceshipInvaderShootTimer = new Timer(200, event -> spaceshipInvaderShoot());
             spaceshipInvaderShootTimer.start();
-            spaceshipInvadersBulletsTimer = new Timer(40, event -> spaceshipInvaderBulletsUpdate());
             spaceshipInvadersBulletsTimer.start();
         });
         spaceshipInvaderTimer.start();
@@ -94,15 +107,9 @@ public class Gameplay extends JComponent implements KeyListener {
      */
     private void moveInvaders() {
         if (!gameOver && !gamePaused) {
-            if (invaders.get(0).getDirection().equals("LEFT")) {
-                moveInvadersLeft();
-            }
-            else if (invaders.get(0).getDirection().equals("DOWN")) {
-                moveInvadersDown();
-            }
-            else if (invaders.get(0).getDirection().equals("RIGHT")) {
-                moveInvadersRight();
-            }
+            if (invaders.get(0).getDirection().equals("LEFT")) moveInvadersLeft();
+            else if (invaders.get(0).getDirection().equals("DOWN")) moveInvadersDown();
+            else if (invaders.get(0).getDirection().equals("RIGHT")) moveInvadersRight();
         }
     }
 
@@ -131,36 +138,35 @@ public class Gameplay extends JComponent implements KeyListener {
 
     /**
      * Handles moving all invaders one blocksize down
+     * If the invaders reach the walls, game over!
      */
     private void moveInvadersDown() {
-            for (int i = 0; i < invaders.size(); i++) {
-                invaders.get(i).move(0, 1);
-                if (invaders.get(i).getPreviousDirection().equals("RIGHT")) {
-                    invaders.get(i).setDirection("LEFT");
-                }
-                else if (invaders.get(i).getPreviousDirection().equals("LEFT")) {
-                    invaders.get(i).setDirection("RIGHT");
+        outerloop:
+        for (int i = 0; i < invaders.size(); i++) {
+            invaders.get(i).move(0, 1);
+            for (int j = 0; j < invaders.get(i).getBlockSize(); j++) {
+                if (invaders.get(i).getBlock(j).getY() > 48) {
+                    gameOver = true;
+                    break outerloop;
                 }
             }
-
+            if (invaders.get(i).getPreviousDirection().equals("RIGHT")) invaders.get(i).setDirection("LEFT");
+            else if (invaders.get(i).getPreviousDirection().equals("LEFT")) invaders.get(i).setDirection("RIGHT");
+        }
     }
 
     /**
      * Handles moving all invaders one blocksize to the left
      */
     private void moveInvadersLeft() {
-            int x = 80;
-            for (int i = 0; i < invaders.size(); i++) {
-                for (int j = 0; j < invaders.get(i).getBlockSize(); j++) {
-                    if (invaders.get(i).getBlock(j).getX() < x) {
-                        x = invaders.get(i).getBlock(j).getX();
-                    }
-                }
-            }
+        int x = 80;
         for (int i = 0; i < invaders.size(); i++) {
-            if (x > 1) {
-                invaders.get(i).move(-1, 0);
+            for (int j = 0; j < invaders.get(i).getBlockSize(); j++) {
+                if (invaders.get(i).getBlock(j).getX() < x) x = invaders.get(i).getBlock(j).getX();
             }
+        }
+        for (int i = 0; i < invaders.size(); i++) {
+            if (x > 1) invaders.get(i).move(-1, 0);
             if (x <= 1) {
                 invaders.get(i).setPreviousDirection(invaders.get(i).getDirection());
                 invaders.get(i).setDirection("DOWN");
@@ -175,9 +181,7 @@ public class Gameplay extends JComponent implements KeyListener {
         if (!gameOver && !gamePaused) {
             Random random = new Random();
             if (invaders.size() == 1) {
-                if (random.nextInt(2) < 0) {
-                    invaderBullets.add(new Block(10, invaders.get(0).getBlock(3).getX(), invaders.get(0).getBlock(3).getY() + 1, Color.white));
-                }
+                if (random.nextInt(2) < 0) invaderBullets.add(new Block(10, invaders.get(0).getBlock(3).getX(), invaders.get(0).getBlock(3).getY() + 1, Color.white));
             }
             else {
                 int numberOfShots = random.nextInt(invaders.size() / 2);
@@ -204,10 +208,9 @@ public class Gameplay extends JComponent implements KeyListener {
                 }
                 for (int j = 0; j < spaceship.getNumberOfBlocks(); j++) {
                     if (invaderBullets.get(i).getX() == spaceship.getBlock(j).getX() && invaderBullets.get(i).getY() == spaceship.getBlock(j).getY()) {
+                        lifeRemaining.remove(lifeRemaining.size() - 1);
                         spaceship.deductLife();
-                        if (spaceship.getLife() == 0) {
-                            gameOver = true;
-                        }
+                        if (spaceship.getLife() == 0) gameOver = true;
                         invaderBullets.remove(i);
                         continue outerloop;
                     }
@@ -222,7 +225,6 @@ public class Gameplay extends JComponent implements KeyListener {
                     }
                 }
             }
-            frame.repaint();
         }
     }
 
@@ -301,14 +303,34 @@ public class Gameplay extends JComponent implements KeyListener {
 
     /**
      * Move the spaceship invaders bullets
+     * Determines if the the bullet hits a wall, hits the spaceship of goes off screen and acts accordingly
      */
     private void spaceshipInvaderBulletsUpdate() {
         if (!gameOver && !gamePaused) {
+            outerloop:
             for (int i = 0; i < spaceshipInvaderBullets.size(); i++) {
                 spaceshipInvaderBullets.get(i).move(spaceshipInvaderBullets.get(i).getX(), spaceshipInvaderBullets.get(i).getY() + 1);
                 if (spaceshipInvaderBullets.get(i).getY() > 81) {
                     spaceshipInvaderBullets.remove(i);
                     continue;
+                }
+                for (int j = 0; j < walls.size(); j++) {
+                    for (int k = 0; k < walls.get(j).getBlocksSize(); k++) {
+                        if (spaceshipInvaderBullets.get(i).getX() == walls.get(j).getBlock(k).getX() && spaceshipInvaderBullets.get(i).getY() == walls.get(j).getBlock(k).getY()) {
+                            walls.get(j).removeBlock(k);
+                            spaceshipInvaderBullets.remove(i);
+                            continue outerloop;
+                        }
+                    }
+                }
+                for (int j = 0; j < spaceship.getNumberOfBlocks(); j++) {
+                    if (spaceshipInvaderBullets.get(i).getX() == spaceship.getBlock(j).getX() && spaceshipInvaderBullets.get(i).getY() == spaceship.getBlock(j).getY()) {
+                        lifeRemaining.remove(lifeRemaining.size() - 1);
+                        spaceship.deductLife();
+                        if (spaceship.getLife() == 0) gameOver = true;
+                        spaceshipInvaderBullets.remove(i);
+                        continue outerloop;
+                    }
                 }
             }
         }
@@ -320,6 +342,9 @@ public class Gameplay extends JComponent implements KeyListener {
     protected void paintComponent(Graphics graphics) {
         drawScoreboard(graphics);
         spaceship.draw(graphics);
+        for (int i = 0; i < lifeRemaining.size(); i++) {
+            lifeRemaining.get(i).draw(graphics);
+        }
         spaceship.drawBullets(graphics);
         for (int i = 0; i < walls.size(); i++) {
             walls.get(i).draw(graphics);
@@ -344,8 +369,9 @@ public class Gameplay extends JComponent implements KeyListener {
     private void drawScoreboard(Graphics graphics) {
         graphics.setColor(Color.white);
         graphics.setFont(new Font("New Times Roman", Font.PLAIN, 20));
-        graphics.drawString("SPACE INVADERS CLONE", 30, 30);
-        graphics.drawString("SCORE: " + score, 680, 30);
+        graphics.drawString("SPACE INVADERS CLONE", 30, 38);
+        graphics.drawString("LIFE: ", 430, 38);
+        graphics.drawString("SCORE: " + score, 680, 38);
     }
 
     /**
@@ -357,7 +383,13 @@ public class Gameplay extends JComponent implements KeyListener {
         graphics.setColor(Color.white);
         graphics.setFont(new Font("New Times Roman", Font.PLAIN, 40));
         graphics.drawString(text, x, 300);
+        if (text.equals("GAME OVER!")) repaintTimer.stop();
     }
+
+    /**
+     * Repaints the frame
+     */
+    private void repaintFrame() { frame.repaint(); }
 
     /**
      * KeyListener methods
@@ -372,23 +404,16 @@ public class Gameplay extends JComponent implements KeyListener {
         if (!gameOver && !gamePaused) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    if (spaceship.getBlock(0).getX() >= 2) {
-                        spaceship.move(-2);
-                    }
+                    if (spaceship.getBlock(0).getX() >= 2) spaceship.move(-2);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if (spaceship.getBlock(4).getX() <= 78) {
-                        spaceship.move(2);
-                    }
+                    if (spaceship.getBlock(4).getX() <= 78) spaceship.move(2);
                     break;
                 case KeyEvent.VK_SPACE:
-                    if (spaceship.getBulletsSize() < 5) {
-                        spaceship.shoot();
-                    }
+                    if (spaceship.getBulletsSize() < 5) spaceship.shoot();
                     break;
                 case KeyEvent.VK_P:
                     gamePaused = true;
-                    frame.repaint();
             }
         }
         if (gamePaused) {

@@ -41,6 +41,15 @@ public class Spaceship {
     }
 
     /**
+     * Moves the ship on the x axis
+     */
+    public void moveY(int y) {
+        for (int i = 0; i < blocks.length; i++) {
+            blocks[i].move(blocks[i].getX(), blocks[i].getY() + y);
+        }
+    }
+
+    /**
      * Adds a blocks to the bullets ArrayList and positions it accordingly
      */
     public void shoot() {
