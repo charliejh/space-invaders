@@ -382,8 +382,14 @@ public class Gameplay extends JComponent implements KeyListener {
         graphics.fillRect(0,0,80 * 10, 80 * 10 + 25);
         graphics.setColor(Color.white);
         graphics.setFont(new Font("New Times Roman", Font.PLAIN, 40));
-        graphics.drawString(text, x, 300);
-        if (text.equals("GAME OVER!")) repaintTimer.stop();
+        if (score != 22) {
+            graphics.drawString(text, x, 300);
+            repaintTimer.stop();
+        }
+        else {
+            graphics.drawString("YOU WIN!", 300, 300);
+            repaintTimer.stop();
+        }
     }
 
     /**
