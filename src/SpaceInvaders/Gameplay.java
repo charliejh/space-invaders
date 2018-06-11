@@ -20,7 +20,7 @@ public class Gameplay extends JComponent implements KeyListener {
     private boolean gameOver = false;
     private boolean gamePaused = false;
     private int score = 0;
-    private Timer repaintTimer = new Timer(10, e-> repaintFrame());
+    private Timer repaintTimer = new Timer(10, event -> repaintFrame());
     private Timer spaceshipInvaderMove = new Timer(40, event -> moveSpaceshipInvader());
     private Timer spaceshipInvaderShootTimer = new Timer(200, event -> spaceshipInvaderShoot());
     private Timer spaceshipInvadersBulletsTimer = new Timer(40, event -> spaceshipInvaderBulletsUpdate());
